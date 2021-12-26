@@ -16,11 +16,36 @@ namespace TrackerLibrary
         //private set means that only methods inside the GlobalConfig class can set the values of the variable Connections.
         //everyone can read still
 
-        //Decided to use a List of IDataConnection as we can have multiple sources to save or pull data from.
-        public static List<IDataConnection> Connections { get; private set; } = new List<IDataConnection>();
-        public static void InitializeConnections(bool database, bool textFiles)
+        /*Decided to use a List of IDataConnection as we can have multiple sources to save or pull data from.
+        public static List<IDataConnection> Connections { get; private set; } = new List<IDataConnection>();*/
+
+        /*
+         *Actually, after seeing the Id in the model will cause problem, for example, same prize can
+         *have a different id in text and sql, i decided not to use a list of IDataConnection but a single one.
+         *
+         */
+
+        public static IDataConnection Connection { get; private set; }
+
+        public static void InitializeConnections(DatabaseType db)
         {
-            if (database)
+            /*
+            switch + tab + tab
+            automatically creates the 
+            switch on db 
+             
+            switch (db)
+            {
+                case DatabaseType.Sql:
+                    break;
+                case DatabaseType.TextFile:
+                    break;
+                default:
+                    break;
+            }
+            */
+
+            if (db == DatabaseType.Sql)
             {
                 //TODO - set up the sql connector properly.
                 /*
@@ -31,16 +56,16 @@ namespace TrackerLibrary
                 In fact, this is the whole point why I am using interfaces.
                  */
                 SqlConnector sql = new SqlConnector();
-                Connections.Add(sql);
+                Connection = sql;
             }
-            if (textFiles)
+            else if (db == DatabaseType.TextFile)
             {
                 //TODO - create the text connection.
                 /*
                  same as SqlConnector.
                  */
                 TextConnector text = new TextConnector();
-                Connections.Add(text);
+                Connection = text;
             }
         }
         public static string CnnString(string name)
