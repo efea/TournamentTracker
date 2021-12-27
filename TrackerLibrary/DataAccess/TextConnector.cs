@@ -66,8 +66,13 @@ namespace TrackerLibrary.DataAccess
 
         }
 
+        public PersonModel CreatePerson(PersonModel model)
+        {
+            return new PersonModel();
+        }
+
         private const string PrizesFile = "PrizeModels.csv";
 
-
+ 
     }
 }

@@ -47,7 +47,6 @@ namespace TrackerLibrary
 
             if (db == DatabaseType.Sql)
             {
-                //TODO - set up the sql connector properly.
                 /*
                  notice here that, we can add our SqlConnector instance to our Connections list.
                 eventhough, it is a list of IDataConnection. 
@@ -60,7 +59,6 @@ namespace TrackerLibrary
             }
             else if (db == DatabaseType.TextFile)
             {
-                //TODO - create the text connection.
                 /*
                  same as SqlConnector.
                  */

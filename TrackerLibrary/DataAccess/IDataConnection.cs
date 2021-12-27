@@ -17,6 +17,7 @@ namespace TrackerLibrary.DataAccess
         //different functionality of the code.
 
         PrizeModel CreatePrize(PrizeModel model);
+        PersonModel CreatePerson(PersonModel model);
 
     }
 }

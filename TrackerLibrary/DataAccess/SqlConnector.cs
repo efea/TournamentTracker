@@ -21,7 +21,6 @@ namespace TrackerLibrary.DataAccess
     //implements the IDataConnection
     public class SqlConnector : IDataConnection
     {
-        //TODO - Make the CreatePrize method actually save to the database.
         /// <summary>
         /// Saves a new prize to the database.
         /// </summary>
@@ -56,6 +55,27 @@ namespace TrackerLibrary.DataAccess
                  * it says
                  * give me the value of @id and it is of type int
                  */
+                model.Id = p.Get<int>("@id");
+
+                return model;
+
+            }
+        }
+
+        public PersonModel CreatePerson(PersonModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString("Tournaments")))
+            {
+                var p = new DynamicParameters();
+                p.Add("@FirstName", model.FirstName);
+                p.Add("@LastName", model.LastName);
+                p.Add("@CellphoneNumber", model.CellphoneNumber);
+                p.Add("@EmailAddress", model.EmailAddress);
+                p.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+
+                connection.Execute("dbo.spPeople_Insert", p, commandType: CommandType.StoredProcedure);
+
                 model.Id = p.Get<int>("@id");
 
                 return model;

@@ -8,7 +8,7 @@ using TrackerLibrary.Models;
 
 /*
  * I manually added the .TextConnector to this namespace
- * Did this edit so that, only the using() statements will receive this clutter
+ * Did this edit so that, only the using statements[meaning namespaces] will receive this clutter
  * that this will create.
  */
 
