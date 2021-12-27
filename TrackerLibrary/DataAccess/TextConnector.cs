@@ -93,9 +93,9 @@ namespace TrackerLibrary.DataAccess
 
         }
 
-
-
-
-
+        public List<PersonModel> GetPerson_All()
+        {
+            return PeopleFile.FullFilePath().LoadFile().ConvertToPersonModels();
+        }
     }
 }

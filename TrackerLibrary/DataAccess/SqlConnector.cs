@@ -5,6 +5,7 @@ using System.Text;
 using TrackerLibrary.Models;
 using System.Data.SqlClient;
 using Dapper;
+using System.Linq;
 
 
 /*
@@ -21,6 +22,7 @@ namespace TrackerLibrary.DataAccess
     //implements the IDataConnection
     public class SqlConnector : IDataConnection
     {
+        private const string db = "Tournaments";
         /// <summary>
         /// Saves a new prize to the database.
         /// </summary>
@@ -36,7 +38,7 @@ namespace TrackerLibrary.DataAccess
 
             That's why the any type that is inside the using statement has to implement IDisposable.
              */
-           using(IDbConnection connection = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString("Tournaments")))
+           using(IDbConnection connection = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString(db)))
             {
                 var p = new DynamicParameters();
                 p.Add("@PlaceNumber", model.PlaceNumber);
@@ -70,7 +72,7 @@ namespace TrackerLibrary.DataAccess
 
         public PersonModel CreatePerson(PersonModel model)
         {
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString("Tournaments")))
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString(db)))
             {
                 var p = new DynamicParameters();
                 p.Add("@FirstName", model.FirstName);
@@ -87,6 +89,18 @@ namespace TrackerLibrary.DataAccess
                 return model;
 
             }
+        }
+
+        public List<PersonModel> GetPerson_All()
+        {
+            List<PersonModel> output;
+
+            using(IDbConnection connection = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString(db)))
+            {
+                output = connection.Query<PersonModel>("dbo.spPeople_GetAll").ToList();
+            }  
+
+            return output;
         }
     }
 }
