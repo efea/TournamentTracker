@@ -43,6 +43,12 @@ namespace TrackerLibrary.DataAccess
                 p.Add("@PlaceName", model.PlaceName);
                 p.Add("@PrizeAmount", model.PrizeAmount);
                 p.Add("@PrizePercentage", model.PrizePercentage);
+
+                /*
+                To the dynamicParameters p, we should add the @id variable.
+                we set it to 0. it is of DbType int32
+                direction is output since we will get it as an output of database.
+                */
                 p.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
                 /*
                 now this Execute method will execute the store procedure we defined, pass all the information we defined

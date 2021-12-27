@@ -24,6 +24,9 @@ namespace TrackerLibrary.DataAccess
      */
     public class TextConnector : IDataConnection
     {
+        private const string PrizesFile = "PrizeModels.csv";
+        private const string PeopleFile = "PersonModels.csv";
+
         /*
         decided to use 1 file per model so each of them will have its own txt file, just as each model has its own 
         table in the SQL.
@@ -66,13 +69,33 @@ namespace TrackerLibrary.DataAccess
 
         }
 
+        /*
+         * Completely same sort of logic as the CreatePrize method above. 
+         */
         public PersonModel CreatePerson(PersonModel model)
         {
-            return new PersonModel();
+            List<PersonModel> people = PeopleFile.FullFilePath().LoadFile().ConvertToPersonModels();
+
+            int currentId = 1;
+            if(people.Count > 0)
+            {
+                currentId = people.OrderByDescending(x => x.Id).First().Id + 1;
+
+            }
+            //set the id of the model that was passed in as the currentId
+            model.Id = currentId;
+
+            people.Add(model);
+
+            people.SaveToPeopleFile(PeopleFile);
+
+            return model;
+
         }
 
-        private const string PrizesFile = "PrizeModels.csv";
 
- 
+
+
+
     }
 }

@@ -66,6 +66,29 @@ namespace TrackerLibrary.DataAccess.TextHelpers
             }
             return output;
         }
+        /*
+         * Basically same as the ConvertToPrizeModels method.
+         */
+        public static List<PersonModel> ConvertToPersonModels(this List<string> lines)
+        {
+            List<PersonModel> output = new List<PersonModel>();
+            foreach (string line in lines)
+            {
+                string[] cols = line.Split(',');
+
+                PersonModel p = new PersonModel();
+
+                p.Id = int.Parse(cols[0]);
+                p.FirstName = cols[1];
+                p.LastName = cols[2];
+                p.EmailAddress = cols[3];
+                p.CellphoneNumber = cols[4];
+                output.Add(p);
+
+            }
+            return output;
+        
+        }
 
         public static void SaveToPrizeFile(this List<PrizeModel> models, string fileName)
         {
@@ -74,6 +97,22 @@ namespace TrackerLibrary.DataAccess.TextHelpers
             foreach(PrizeModel p in models)
             {
                 lines.Add($"{ p.Id },{ p.PlaceNumber },{ p.PlaceName },{ p.PrizeAmount },{ p.PrizePercentage }");
+            }
+
+            File.WriteAllLines(fileName.FullFilePath(), lines);
+
+        }
+
+        public static void SaveToPeopleFile(this List<PersonModel> models, string fileName)
+        {
+            List<string> lines = new List<string>();
+
+            //creates a line in the form
+            //id,firstname,lastname,email,cellnmber
+            //adds it to the list<string> lines where each element of the list is a line that represents a person.
+            foreach(PersonModel p in models)
+            {
+                lines.Add($"{p.Id},{p.FirstName},{p.LastName},{p.EmailAddress},{p.CellphoneNumber}");
             }
 
             File.WriteAllLines(fileName.FullFilePath(), lines);
