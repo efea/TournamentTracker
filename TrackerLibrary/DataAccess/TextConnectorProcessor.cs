@@ -90,6 +90,51 @@ namespace TrackerLibrary.DataAccess.TextHelpers
         
         }
 
+        public static List<TeamModel> ConvertToTeamModels(this List<string> lines, string peopleFileName) {
+
+            //id,teamName,list of ids separated by the | 
+            //3,Team c7, 1|3|5 ----> id of team, name of team, each of id of each person of the team.
+            //we then need to pull the information on the members by querying by their id numbers.
+
+            List<TeamModel> output = new List<TeamModel>();
+
+            //list of people.
+            List<PersonModel> people = peopleFileName.FullFilePath().LoadFile().ConvertToPersonModels();
+
+
+            foreach (string line in lines)
+            {
+                string[] cols = line.Split(',');
+                TeamModel t = new TeamModel();
+
+                t.Id = int.Parse(cols[0]);
+                t.TeamName = cols[1];
+
+                string[] personIds = cols[2].Split('|');
+
+                foreach(string id in personIds)
+                {
+
+                   /*
+                    *   take the list of people, 
+                    *   search the list to find the id matching the id in my personIds array.
+                    *   if everything is fine, we should return a single id.
+                    *   however, c# obviously does NOT know that so it tries to return a list.
+                    *   Therefore, I take the First() item in it, which should be the only item anyways.
+                    *   Here i am deliberately not using FirstOrDefault to return null if the list is empty
+                    *   I WANT my application to crash(for right now) if the List is empty.
+                    */
+                    t.TeamMembers.Add(people.Where(x => x.Id == int.Parse(id)).First());
+                }
+                output.Add(t);
+            }
+
+            return output;
+
+
+        
+        }
+
         public static void SaveToPrizeFile(this List<PrizeModel> models, string fileName)
         {
             List<string> lines = new List<string>();
@@ -118,5 +163,41 @@ namespace TrackerLibrary.DataAccess.TextHelpers
             File.WriteAllLines(fileName.FullFilePath(), lines);
 
         }
+
+        public static void SaveToTeamFile(this List<TeamModel> models, string fileName)
+        {
+            List<string> lines = new List<string>();
+            foreach(TeamModel t in models)
+            {
+                lines.Add($"{t.Id},{t.TeamName},{ConvertPeopleListToString(t.TeamMembers)}");
+            }
+
+            File.WriteAllLines(fileName.FullFilePath(), lines);
+        }
+
+        /// <summary>
+        /// helper function to convert a list of Personmodel to string where each person id is 
+        /// delimited by | character
+        /// </summary>
+        /// <param name="people"></param>
+        /// <returns></returns>
+        private static string ConvertPeopleListToString(List<PersonModel> people)
+        {
+            string output = "";
+
+            if (people.Count == 0) return "";
+
+            foreach(PersonModel p in people)
+            {
+                output += $"{p.Id}|";
+            }
+            output = output.Substring(0, output.Length - 1);
+
+            return output;
+        }
+    
+    
+    
+
     }
 }

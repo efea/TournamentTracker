@@ -32,6 +32,8 @@ namespace TrackerLibrary.Models
         /// </summary>
         public string TeamName { get; set; }
 
+        public int Id { get; set; }
+
 
     }
 }
