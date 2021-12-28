@@ -129,5 +129,37 @@ namespace TrackerLibrary.DataAccess
             return model;
 
         }
+
+        public List<TeamModel> GetTeam_All()
+        {
+            List<TeamModel> output;
+
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString(db)))
+            {
+                output = connection.Query<TeamModel>("dbo.spTeams_GetAll").ToList();
+
+
+                /*
+                 *  For each team in the resulting list of TeamModel
+                 *  I need to query their teammembers as the list I get does not provide that.
+                 *  
+                 *  For each team, I am calling my store procedure which 
+                 *  Takes the TeamId as parameter and then
+                 *  take the conjunction of the tables People and TeamMembers where People.Id = TeamMember.PersonId
+                 *  where TeamId is the team we passed as the parameter.
+                 */
+                foreach(TeamModel team in output)
+                {
+                    var p = new DynamicParameters();
+
+                    //note how I pass the TeamId as a parameter to my stored procedure.
+                    p.Add("@TeamId", team.Id);
+
+                    team.TeamMembers = connection.Query<PersonModel>("dbo.spTeamMembers_GetByTeam", p, commandType: CommandType.StoredProcedure ).ToList();
+                }
+            }
+
+            return output;
+        }
     }
 }

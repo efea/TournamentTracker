@@ -126,6 +126,9 @@ namespace TrackerLibrary.DataAccess.TextHelpers
                     */
                     t.TeamMembers.Add(people.Where(x => x.Id == int.Parse(id)).First());
                 }
+
+                //This wasnt added in the original BUT I have to add t to the output right?
+                //otherwise this wouldn't even work
                 output.Add(t);
             }
 
