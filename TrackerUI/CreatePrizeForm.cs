@@ -13,9 +13,15 @@ namespace TrackerUI
 {
     public partial class CreatePrizeForm : Form
     {
-        public CreatePrizeForm()
+        IPrizeRequester callingForm;
+        public CreatePrizeForm(IPrizeRequester caller)
         {
             InitializeComponent();
+            /*
+             *  create a variable at the class level to store what is passed to the Ctor.
+             *  We need to know the caller outside of the scope of the Ctor.
+             */
+            callingForm = caller;
         }
 
         private void createPrizeButton_Click(object sender, EventArgs e)
@@ -32,13 +38,19 @@ namespace TrackerUI
                 {
                     db.CreatePrize(model);
                 }*/
-
-                /**/
                 GlobalConfig.Connection.CreatePrize(model);
-                placeNameValue.Text = "";
-                placeNumberValue.Text =  "";
-                prizeAmountValue.Text = "0";
-                prizePercentageValue.Text = "0";
+
+                /*
+                 * I say now, to whoever called this, I created the prize
+                 * and here is the fully created model.
+                 */
+                callingForm.PrizeComplete(model);
+
+                this.Close();
+                //placeNameValue.Text = "";
+                //placeNumberValue.Text =  "";
+                //prizeAmountValue.Text = "0";
+                //prizePercentageValue.Text = "0";
 
             }
             else
