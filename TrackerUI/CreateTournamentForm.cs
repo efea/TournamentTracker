@@ -170,7 +170,12 @@ namespace TrackerUI
             //As with the prizes, add selectedteams to our tournament.
             tm.EnteredTeams = selectedTeams;
 
-            //Wire up matchups
+            //TODO - Wire up matchups
+            //I moved the logic to CreateRounds to a seperate class.
+            //Note that, as I don't think I will need to store anything in the TournamentLogic class, I made it static
+            //Static classes cannot be instantiated with new() operator. 
+            // TournamentLogic will do the work on the TournamentModel, meaning it will just modify it.
+            TournamentLogic.CreateRounds(tm);
 
             GlobalConfig.Connection.CreateTournament(tm);
 

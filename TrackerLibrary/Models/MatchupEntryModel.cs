@@ -23,10 +23,15 @@ TrackerLibrary.Models
  */
 namespace TrackerLibrary.Models
 {
-
+    /// a matchup entry is basically 1 team(half) of the matchup
     //cw + tab + tab, snippet for Console.WriteLine();
     public class MatchupEntryModel
     {
+
+        /// <summary>
+        /// represents the unique identifier for a matchup entry.
+        /// </summary>
+        public int Id { get; set; }
         /// <summary>
         /// Represents one team in the matchup
         /// </summary>
@@ -40,14 +45,16 @@ namespace TrackerLibrary.Models
         /// </summary>
         public MatchupModel ParentMatchup { get; set; }
         
+        
+        /*
         /// <summary>
         /// Constructor 
         /// </summary>
         /// <param name="initialSCore"></param>
-        public MatchupEntryModel(double initialSCore)
+        public MatchupEntryModel(double initialSCore, TeamModel teamCompeting)
         {
+            TeamCompeting = teamCompeting;
 
-
-        }
+        }*/
     }
 }
